@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuesta de Viaje | Roma & Crucero Mediterráneo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            deep: '#003366',    // Azul Marino
+                            ocean: '#006994',   // Azul Océano
+                            bright: '#48D1CC',  // Turquesa
+                            accent: '#FFD700',  // Oro
+                            soft: '#F0F8FF'     // Alice Blue
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            background: #FFD700;
+            border: 4px solid #fff;
+            box-shadow: 0 0 0 4px #006994;
+        }
+        .port-card {
+            transition: all 0.3s ease;
+        }
+        .port-card:hover {
+            border-color: #48D1CC;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="bg-brand-soft font-sans text-gray-800 leading-normal">
+
+    <!-- HERO SECTION -->
+    <header class="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-deep to-brand-ocean opacity-90"></div>
+        <div class="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')] bg-cover bg-center"></div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">Roma Eterna & <br><span class="text-brand-accent">El Mediterráneo</span></h1>
+            <p class="text-xl md:text-2xl text-blue-100 font-light mb-8">Un itinerario expandido diseñado para la Sra. Bertha</p>
+            
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="bg-white/20 backdrop-blur-md p-4 rounded-xl border border-white/30 text-white min-w-[150px]">
+                    <p class="text-xs uppercase opacity-70">Salida</p>
+                    <p class="text-xl font-bold">15 ENE 2026</p>
+                </div>
+                <div class="bg-brand-accent p-4 rounded-xl shadow-xl text-brand-deep min-w-[150px]">
+                    <p class="text-xs uppercase font-bold opacity-70">Total Paquete</p>
+                    <p class="text-2xl font-black">$106,860 <span class="text-sm">MXN</span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- INTRODUCCIÓN -->
+    <section class="max-w-5xl mx-auto -mt-16 relative z-20 px-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center md:text-left">
+            <h2 class="text-3xl font-bold text-brand-deep mb-4">Su Gran Aventura Comienza en Italia</h2>
+            <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                Este viaje combina la profundidad histórica de la capital italiana con el lujo náutico de una travesía por cuatro naciones. A continuación, explorará el detalle de cada puerto y la distribución de su inversión.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                <span class="bg-brand-soft text-brand-ocean px-4 py-2 rounded-full text-sm font-bold border border-blue-100"><i class="fas fa-plane mr-2"></i>Vuelos Incluidos</span>
+                <span class="bg-brand-soft text-brand-ocean px-4 py-2 rounded-full text-sm font-bold border border-blue-100"><i class="fas fa-utensils mr-2"></i>Pensión Completa</span>
+                <span class="bg-brand-soft text-brand-ocean px-4 py-2 rounded-full text-sm font-bold border border-blue-100"><i class="fas fa-headset mr-2"></i>Soporte 24/7</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ANALYTICS / DATAVIZ -->
+    <section class="max-w-6xl mx-auto py-20 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-8 rounded-3xl shadow-lg">
+                <h3 class="text-xl font-bold text-brand-ocean mb-2">Inversión por Categoría</h3>
+                <div class="chart-container">
+                    <canvas id="budgetChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-lg">
+                <h3 class="text-xl font-bold text-brand-ocean mb-2">Días por Destino</h3>
+                <div class="chart-container">
+                    <canvas id="destinationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ITINERARIO EXPANDIDO -->
+    <section class="bg-brand-deep py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-white mb-4">Itinerario Detallado</h2>
+                <p class="text-blue-200">14 días de descubrimientos ininterrumpidos</p>
+            </div>
+            
+            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-brand-ocean before:to-transparent">
+                
+                <!-- Día 1 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-accent text-brand-deep font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                        1
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[45%] p-6 rounded-2xl bg-white shadow-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-brand-ocean">15 ENE: ROMA</span>
+                            <span class="text-xs bg-brand-soft px-2 py-1 rounded">Arribo</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Llegada a Roma. Check-in en <strong>Ritmo Blues Guesthouse</strong>. Sugerimos una caminata nocturna por la Fontana di Trevi para comenzar la experiencia.</p>
+                    </div>
+                </div>
+
+                <!-- Día 2: Embarque -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-ocean text-white font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                        2
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[45%] p-6 rounded-2xl bg-white shadow-xl border-l-4 border-brand-bright">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-brand-ocean">16 ENE: EMBARQUE</span>
+                            <span class="text-xs text-red-500 font-bold">Salida 17:00</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Traslado al puerto de Civitavecchia. Inicio del crucero de 11 noches. ¡Cena de gala de bienvenida!</p>
+                    </div>
+                </div>
+
+                <!-- Días de Crucero Detallados -->
+                <div class="bg-white/5 backdrop-blur-sm p-8 rounded-3xl border border-white/10 md:col-span-2">
+                    <h4 class="text-brand-accent font-bold mb-6 text-xl text-center"><i class="fas fa-anchor mr-2"></i>Travesía por el Mediterráneo</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Día 3 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>17 ENE: SAVONA, ITALIA</span>
+                                <span>08:30 - 18:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Puerta de entrada a Génova. Explore el puerto antiguo y la arquitectura renacentista.</p>
+                        </div>
+                        <!-- Día 4 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>18 ENE: MARSELLA, FRANCIA</span>
+                                <span>08:30 - 17:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Visite la Basílica de Notre-Dame de la Garde para las mejores vistas de la Costa Azul.</p>
+                        </div>
+                        <!-- Día 5 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>19 ENE: BARCELONA, ESPAÑA</span>
+                                <span>08:00 - 18:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Caminata por Las Ramblas y tiempo para admirar la Sagrada Familia de Gaudí.</p>
+                        </div>
+                        <!-- Día 6 -->
+                        <div class="port-card bg-white/10 p-4 rounded-xl border border-white/20">
+                            <div class="flex justify-between text-xs font-bold text-white mb-1">
+                                <span>20 ENE: NAVEGACIÓN</span>
+                                <span>ALTAMAR</span>
+                            </div>
+                            <p class="text-xs text-blue-100/60">Día de relax. Disfrute del Spa, las piscinas y los espectáculos estilo Broadway a bordo.</p>
+                        </div>
+                        <!-- Día 7 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>21 ENE: LA GOULETTE, TÚNEZ</span>
+                                <span>08:00 - 18:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Toque exótico en el norte de África. Explore la Medina y las ruinas de Cartago.</p>
+                        </div>
+                        <!-- Día 8 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>22 ENE: PALERMO, SICILIA</span>
+                                <span>08:00 - 18:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Capital de Sicilia, famosa por su catedral y sus mercados de comida callejera.</p>
+                        </div>
+                        <!-- Día 9 -->
+                        <div class="port-card bg-white p-4 rounded-xl border-l-2 border-transparent">
+                            <div class="flex justify-between text-xs font-bold text-brand-ocean mb-1">
+                                <span>23 ENE: NÁPOLES, ITALIA</span>
+                                <span>07:00 - 16:00</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Oportunidad de visitar Pompeya o disfrutar de la pizza napolitana original.</p>
+                        </div>
+                        <!-- Días finales crucero -->
+                        <div class="port-card bg-white/10 p-4 rounded-xl border border-white/20">
+                            <div class="flex justify-between text-xs font-bold text-white mb-1">
+                                <span>24-26 ENE: NAVEGACIÓN</span>
+                                <span>RELAX TOTAL</span>
+                            </div>
+                            <p class="text-xs text-blue-100/60">Últimos días para disfrutar de la gastronomía premium y despedida del barco.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Día 13 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-accent text-brand-deep font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                        13
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[45%] p-6 rounded-2xl bg-white shadow-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-brand-ocean">27 ENE: REGRESO A ROMA</span>
+                            <span class="text-xs text-blue-500 font-bold">Llegada 08:00</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Desembarque. Traslado a Roma. Tarde libre para últimas compras en Vía del Corso.</p>
+                    </div>
+                </div>
+
+                <!-- Día 14 -->
+                <div class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-brand-deep text-white font-bold shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[45%] p-6 rounded-2xl bg-white shadow-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-brand-ocean">28 ENE: VUELO A MÉXICO</span>
+                        </div>
+                        <p class="text-sm text-gray-600">Traslado al aeropuerto Fiumicino. Fin de la aventura.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS INCLUIDOS A BORDO -->
+    <section class="max-w-6xl mx-auto py-20 px-4">
+        <h3 class="text-3xl font-bold text-brand-deep text-center mb-12">La Experiencia "Todo Incluido"</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                <i class="fas fa-utensils text-brand-bright text-3xl mb-4"></i>
+                <h5 class="font-bold text-brand-deep">Gastronomía</h5>
+                <p class="text-xs text-gray-500">Buffet y Restaurantes a la carta incluidos.</p>
+            </div>
+            <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                <i class="fas fa-glass-cheers text-brand-bright text-3xl mb-4"></i>
+                <h5 class="font-bold text-brand-deep">Entretenimiento</h5>
+                <p class="text-xs text-gray-500">Shows nocturnos, música en vivo y clubes.</p>
+            </div>
+            <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                <i class="fas fa-bed text-brand-bright text-3xl mb-4"></i>
+                <h5 class="font-bold text-brand-deep">Cabina Premium</h5>
+                <p class="text-xs text-gray-500">Servicio de limpieza dos veces al día.</p>
+            </div>
+            <div class="text-center p-6 bg-white rounded-2xl shadow-sm">
+                <i class="fas fa-swimmer text-brand-bright text-3xl mb-4"></i>
+                <h5 class="font-bold text-brand-deep">Deportes</h5>
+                <p class="text-xs text-gray-500">Piscinas, gimnasio y áreas deportivas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CTA -->
+    <footer class="bg-white border-t border-gray-100 py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-brand-deep mb-4">¿Lista para vivir el Mediterráneo?</h2>
+            <p class="text-gray-500 mb-8">Haga clic abajo para confirmar estos detalles vía WhatsApp con nuestro equipo.</p>
+            <a href="https://wa.me/2212899364" class="bg-brand-ocean text-white px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all">
+                CONFIRMAR MI VIAJE
+            </a>
+            <div class="mt-16 text-gray-400 text-xs">
+                <p>© 2025 Dreams Center – Viajando Contigo</p>
+                <p class="mt-2 text-[10px] uppercase tracking-widest">ID de Referencia: 41914926</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de Chart.js
+        const wrapLabel = (str) => {
+            if (str.length <= 16) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let current = words[0];
+            for(let i=1; i<words.length; i++) {
+                if((current + ' ' + words[i]).length <= 16) {
+                    current += ' ' + words[i];
+                } else {
+                    lines.push(current);
+                    current = words[i];
+                }
+            }
+            lines.push(current);
+            return lines;
+        };
+
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    return Array.isArray(label) ? label.join(' ') : label;
+                }
+            }
+        };
+
+        // Gráfico Presupuesto
+        new Chart(document.getElementById('budgetChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Crucero (Todo Incluido)', 'Vuelos', 'Hospedaje Roma'],
+                datasets: [{
+                    data: [58000, 46000, 2860],
+                    backgroundColor: ['#003366', '#006994', '#FFD700'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, tooltip: tooltipConfig }
+            }
+        });
+
+        // Gráfico Destinos
+        new Chart(document.getElementById('destinationsChart'), {
+            type: 'bar',
+            data: {
+                labels: [wrapLabel('Italia (Roma, Savona, Nápoles)'), 'Altamar', 'Francia', 'España', 'Túnez'],
+                datasets: [{
+                    label: 'Días/Paradas',
+                    data: [5, 3, 1, 1, 1],
+                    backgroundColor: '#48D1CC',
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { display: false }, y: { grid: { display: false } } },
+                plugins: { legend: { display: false }, tooltip: tooltipConfig }
+            }
+        });
+    </script>
+</body>
+</html>
